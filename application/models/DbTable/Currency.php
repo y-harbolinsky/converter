@@ -28,6 +28,12 @@ class Application_Model_DbTable_Currency extends Zend_Db_Table_Abstract
         'XAU' => 'Gold (troy ounce)',
     ];
 
+    /**
+     * Get stored exchange rate for specific currency relatively USD
+     *
+     * @param $quote String
+     * @return mixed Array
+     */
     public function getCurrencyByQuote($quote)
     {
 
@@ -40,6 +46,12 @@ class Application_Model_DbTable_Currency extends Zend_Db_Table_Abstract
 
     }
 
+    /**
+     * Store exchange rate for specific currency relatively USD
+     *
+     * @param $quote String
+     * @param $rate Array
+     */
     public function addCurrency($quote, $rate)
     {
         $this->insert([
@@ -48,6 +60,12 @@ class Application_Model_DbTable_Currency extends Zend_Db_Table_Abstract
         ]);
     }
 
+    /**
+     * Update stored exchange rate for specific currency relatively USD
+     *
+     * @param $quote String
+     * @param $rate Array
+     */
     public function updateCurrency($quote, $rate)
     {
 
@@ -57,6 +75,11 @@ class Application_Model_DbTable_Currency extends Zend_Db_Table_Abstract
 
     }
 
+    /**
+     * Get real and actual rates
+     *
+     * @return bool
+     */
     public function getExchangeRates()
     {
 
@@ -89,6 +112,11 @@ class Application_Model_DbTable_Currency extends Zend_Db_Table_Abstract
 
     }
 
+    /**
+     * Storing exchange rates
+     *
+     * @param $exchangeRates
+     */
     public function storeExchangeRates($exchangeRates)
     {
 
@@ -101,6 +129,14 @@ class Application_Model_DbTable_Currency extends Zend_Db_Table_Abstract
 
     }
 
+    /**
+     * Calculate result amount based on cuurencies and amount
+     *
+     * @param $currencyIn String
+     * @param $currencyOut String
+     * @param $amountIn Float
+     * @return float|string
+     */
     public function calculateAmount($currencyIn, $currencyOut, $amountIn)
     {
 
@@ -131,6 +167,14 @@ class Application_Model_DbTable_Currency extends Zend_Db_Table_Abstract
 
     }
 
+    /**
+     * Store exchange history
+     *
+     * @param $currencyIn String
+     * @param $amount Float
+     * @param $result Float
+     * @param $currencyOut String
+     */
     public function storeHistory($currencyIn, $amount, $result, $currencyOut)
     {
         $history = new Application_Model_DbTable_History();

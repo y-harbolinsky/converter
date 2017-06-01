@@ -12,7 +12,7 @@
         ->appendHttpEquiv('X-UA-Compatible', 'IE=edge');
 
     echo $this->headMeta()->appendName('theme-color', '#db5945');
-
+    
     header('Expires: true');
     header('Cache-Control: public true max-age=31536000');
     ?>
@@ -23,6 +23,7 @@
         body, html {
             height: 100%;
         }
+
         .wrapper {
             width: 100%;
             display: flex;
@@ -30,6 +31,7 @@
             justify-content: center;
             height: 100%;
         }
+
         div#welcome {
             width: 600px;
             height: 400px;
@@ -75,27 +77,36 @@
         p {
             margin: 5px 0;
         }
+
         .history {
             width: 100%;
             height: auto;
             margin: 10px 0;
             font-size: 90%;
         }
+
         .dropdown {
             background: url(http://i62.tinypic.com/2e3ybe1.jpg) no-repeat right center;
             height: 34px;
             width: 240px;
         }
+
         label {
             float: left;
             margin: 5px;
         }
+
         input[type="text"] {
             width: 240px;
             height: 34px;
         }
+
         .clear {
-            clear:both;
+            clear: both;
+        }
+
+        .error {
+            border: solid 2px red;
         }
     </style>
 

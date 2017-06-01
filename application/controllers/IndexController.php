@@ -18,6 +18,7 @@ class IndexController extends Zend_Controller_Action
         $exchangeRates = $exchangeRates->toArray();
 
         if (count($exchangeRates) == 0) {
+            // Get real and actual rates and store, if no stored data
             $exchangeRates = $currency->getExchangeRates();
             $currency->storeExchangeRates($exchangeRates);
         }

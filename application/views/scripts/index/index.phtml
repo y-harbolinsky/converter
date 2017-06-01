@@ -83,12 +83,16 @@
                     amountInValue = $('#amountIn').val(),
                     currencyOutValue = $('#currencyOut').val();
 
-                if (amountInValue != '') {
+                removeError();
+
+                if ($.isNumeric(amountInValue)) {
                     if (currencyInValue === currencyOutValue) {
                         $('#amountOut').val(amountInValue);
                     } else {
                         calculate(currencyInValue, currencyOutValue, amountInValue);
                     }
+                } else {
+                    $('#amountIn').addClass('error');
                 }
 
             }
@@ -126,9 +130,12 @@
 
                 currencyIn.val(currencyOutValue);
                 currencyOut.val(currencyInValue);
+                removeError();
 
-                if (amountInValue != '') {
+                if ($.isNumeric(amountInValue)) {
                     calculate(currencyIn.val(), currencyOut.val(), amountInValue);
+                } else {
+                    $('#amountIn').addClass('error');
                 }
 
                 return false;
@@ -164,9 +171,11 @@
                 return false;
             }
 
-            $(document).ready(function () {
-
-            });
+            function removeError() {
+                if ($('#amountIn').hasClass('error')) {
+                    $('#amountIn').removeClass('error');
+                }
+            }
         </script>
 
     </div>
