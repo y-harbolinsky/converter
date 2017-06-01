@@ -1,0 +1,173 @@
+<div id="welcome">
+
+    <div id="more-information">
+
+        <div>
+            <h3>History:</h3>
+            <div class="history">
+
+                <?php foreach ($this->historyLogs as $log): ?>
+
+                    <p>
+                        <?php
+                        echo '{' . $log['currency_in'] . '}' . ' {' . $log['amount'] . '} -> {' . $log['result'] . '} {' . $log['currency_out'] . '}';
+                        ?>
+                    </p>
+
+                <?php endforeach; ?>
+
+            </div>
+        </div>
+
+        <div>
+            <div class="given">
+                <div>
+                    <label for="currencyIn">Currency I have:</label>
+                    <select class="dropdown" name='currencyIn' id="currencyIn" onchange="calculateAmount(event);">
+                        <?php foreach ($this->currencies as $currency): ?>
+
+                            <option value="<?php echo $currency['quote']; ?>">
+                                <?php echo Application_Model_DbTable_Currency::$currenciesNames[$currency['quote']]; ?>
+                            </option>
+
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="amountIn">AMOUNT:</label>
+                    <input type="text" name="amountIn" id="amountIn" autocomplete="off"
+                           onkeyup="if(event.keyCode == 13) event.preventDefault();calculateAmount(event);">
+                </div>
+
+            </div>
+
+            <div class="swap">
+                <button onclick="swap();">Swap</button>
+            </div>
+
+            <div class="desired">
+                <div>
+                    <label for="currencyOut">Currency I want:</label>
+                    <select class="dropdown" name='currencyOut' id="currencyOut" onchange="calculateAmount(event);">
+                        <?php foreach ($this->currencies as $currency): ?>
+
+                            <option value="<?php echo $currency['quote']; ?>">
+                                <?php echo Application_Model_DbTable_Currency::$currenciesNames[$currency['quote']]; ?>
+                            </option>
+
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="amountOut">AMOUNT:</label>
+                    <input type="text" name="amountOut" id="amountOut">
+                </div>
+
+            </div>
+
+            <div>
+
+            </div>
+
+        </div>
+
+        <div class="clear"></div>
+
+        <script type="text/javascript">
+
+            function calculateAmount(event) {
+
+                var currencyInValue = $('#currencyIn').val(),
+                    amountInValue = $('#amountIn').val(),
+                    currencyOutValue = $('#currencyOut').val();
+
+                if (amountInValue != '') {
+                    if (currencyInValue === currencyOutValue) {
+                        $('#amountOut').val(amountInValue);
+                    } else {
+                        calculate(currencyInValue, currencyOutValue, amountInValue);
+                    }
+                }
+
+            }
+
+            function calculate(currencyIn, currencyOut, amountIn) {
+                $.ajax({
+                    url: '/index/calculate-amount',
+                    type: 'POST',
+                    data: {currencyIn: currencyIn, currencyOut: currencyOut, amountIn: amountIn},
+                    dataType: 'json',
+                    async: true,
+
+                    success: function (data, status) {
+                        if (data.amountOut) {
+                            $('#amountOut').val(data.amountOut);
+                            updateHistory();
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                    }
+                });
+
+                return false;
+
+            }
+
+            function swap() {
+                var currencyIn = $('#currencyIn'),
+                    currencyInValue = currencyIn.val(),
+                    currencyOut = $('#currencyOut'),
+                    currencyOutValue = currencyOut.val(),
+                    amountInValue = $('#amountIn').val();
+
+                currencyIn.val(currencyOutValue);
+                currencyOut.val(currencyInValue);
+
+                if (amountInValue != '') {
+                    calculate(currencyIn.val(), currencyOut.val(), amountInValue);
+                }
+
+                return false;
+            }
+
+            function updateHistory() {
+                $.ajax({
+                    url: '/index/get-last-history',
+                    type: 'GET',
+                    dataType: 'json',
+                    async: true,
+
+                    success: function (data, status) {
+
+                        if (data && (data.length > 0)) {
+                            $('.history').html('');
+                            data.forEach(function (log) {
+
+                                var p = $('<p>{' + log.currency_in + '} {' + log.amount + '} -> {' + log.result + '} {' + log.currency_out + '}</p>');
+                                $('.history').append(p);
+
+                            });
+
+                        }
+
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                    }
+                });
+
+                return false;
+            }
+
+            $(document).ready(function () {
+
+            });
+        </script>
+
+    </div>
+</div>
