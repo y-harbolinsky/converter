@@ -21,9 +21,10 @@ class IndexController extends Zend_Controller_Action
             // Get real and actual rates and store, if no stored data
             $exchangeRates = $currency->getExchangeRates();
             $currency->storeExchangeRates($exchangeRates);
+        } else {
+            $this->view->currencies = $exchangeRates;
         }
 
-        $this->view->currencies = $exchangeRates;
         $this->view->historyLogs = $history->getLastHistory();
 
     }
